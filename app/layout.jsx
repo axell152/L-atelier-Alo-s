@@ -9,26 +9,29 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="fr" className="h-full">
-      <body className="min-h-full flex flex-col bg-gradient-to-br from-slate-50 via-pink-50/20 to-indigo-50/30 text-slate-800 antialiased selection:bg-pink-500 selection:text-white">
+      <body className="min-h-full flex flex-col bg-[#FDFBF7] text-[#4A3B32] antialiased selection:bg-[#E8A598] selection:text-white">
         
         {/* Barre de navigation */}
-        <header className="sticky top-0 z-50 backdrop-blur-md bg-white/80 border-b border-slate-100 shadow-xs">
+        <header className="sticky top-0 z-50 backdrop-blur-md bg-[#FDFBF7]/90 border-b border-[#EFECE6]">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
-            <Link href="/" className="flex items-center gap-2 group">
-              <span className="text-2xl">✨</span>
-              <span className="font-bold text-xl tracking-tight bg-gradient-to-r from-indigo-600 to-pink-600 bg-clip-text text-transparent group-hover:opacity-90 transition">
+            <Link href="/" className="flex items-center gap-3 group">
+              {/* Vous pouvez remplacer le cercle par votre logo si vous l'avez en image */}
+              <div className="w-10 h-10 rounded-full bg-[#FFB6C1] flex items-center justify-center text-[#5A3E36] font-bold shadow-xs">
+                A
+              </div>
+              <span className="font-serif font-bold text-lg tracking-wide text-[#5A3E36] group-hover:opacity-80 transition">
                 L'Atelier de l'Aloès
               </span>
             </Link>
 
-            <nav className="flex items-center gap-3 sm:gap-6">
-              <Link href="/" className="text-sm font-medium text-slate-600 hover:text-indigo-600 transition">
+            <nav className="flex items-center gap-4 sm:gap-6">
+              <Link href="/" className="text-sm font-medium text-[#6B5B52] hover:text-[#5A3E36] transition">
                 Catalogue
               </Link>
-              <Link href="/panier" className="inline-flex items-center gap-2 text-sm font-semibold bg-slate-900 text-white px-4 py-2.5 rounded-full hover:bg-slate-800 shadow-sm transition transform active:scale-95">
+              <Link href="/panier" className="inline-flex items-center gap-2 text-sm font-medium bg-[#5A3E36] text-white px-4.5 py-2.5 rounded-full hover:bg-[#4A3B32] shadow-sm transition transform active:scale-95">
                 <span>🛒</span> Panier
               </Link>
-              <Link href="/admin" className="text-xs font-medium text-slate-400 hover:text-slate-600 px-2 py-1 rounded">
+              <Link href="/admin" className="text-xs text-[#A3958E] hover:text-[#6B5B52]">
                 Admin
               </Link>
             </nav>
@@ -36,14 +39,14 @@ export default function RootLayout({ children }) {
         </header>
 
         {/* Contenu principal */}
-        <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-10">
+        <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-12">
           {children}
         </main>
 
         {/* Pied de page */}
-        <footer className="bg-white border-t border-slate-100 py-8 text-center text-sm text-slate-400">
-          <p>© {new Date().getFullYear()} L'Atelier de l'Aloès — Confectionné avec amour & Cricut ✂️</p>
-          <p className="mt-1 text-xs text-slate-300">Commandes personnalisées validées exclusivement via WhatsApp</p>
+        <footer className="bg-[#F7F4EE] border-t border-[#EFECE6] py-10 text-center text-xs text-[#8C7A70]">
+          <p>© {new Date().getFullYear()} L'Atelier de l'Aloès — Confectionné avec amour à la Cricut ✂️</p>
+          <p className="mt-1">Commandes personnalisées validées exclusivement via WhatsApp</p>
         </footer>
       </body>
     </html>
