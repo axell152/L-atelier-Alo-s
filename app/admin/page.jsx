@@ -1,4 +1,4 @@
-import sql, { initDb } from '@/lib/db';
+import sql, { initDb } from '../../lib/db';
 import { revalidatePath } from 'next/cache';
 
 export const revalidate = 0;
