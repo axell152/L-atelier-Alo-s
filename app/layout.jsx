@@ -15,9 +15,8 @@ export default function RootLayout({ children }) {
         <header className="sticky top-0 z-50 backdrop-blur-md bg-[#FDFBF7]/90 border-b border-[#EFECE6]">
   <div className="max-w-6xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
     <Link href="/" className="flex items-center gap-3 group">
-      {/* Intégration de votre logo */}
-      <img src="/logo.png" alt="L'Atelier de l'Aloès" className="h-12 w-auto object-contain rounded-xl" />
-    </Link>
+  <img src="/logo.png" alt="L'Atelier de l'Aloès" className="h-16 w-auto object-cover rounded-xl shadow-xs" />
+</Link>
 
     <nav className="flex items-center gap-4 sm:gap-6">
       <Link href="/" className="text-sm font-medium text-[#6B5B52] hover:text-[#5A3E36] transition">
