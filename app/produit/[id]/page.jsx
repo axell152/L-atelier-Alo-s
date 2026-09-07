@@ -4,99 +4,70 @@ import { notFound } from 'next/navigation';
 
 export const revalidate = 0;
 
-export default async function ProductPage({ params }) {
-  await initDb();
+export default async function ProductDetailPage({ params }) {
   const { id } = params;
 
-  const result = await sql`SELECT * FROM products WHERE id = ${id}`;
-  if (result.length === 0) {
+  await initDb();
+  const products = await sql`SELECT * FROM products WHERE id = ${id} AND is_hidden = FALSE`;
+  
+  if (products.length === 0) {
     notFound();
   }
 
-  // Exemple à intégrer dans votre page de détail produit existante :
-const whatsappNumber = '33750998315'; // Votre numéro WhatsApp
-const message = `Bonjour, j'ai une question concernant votre article "${product.title}" (${Number(product.price).toFixed(2)} €).`;
-const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+  const product = products[0];
 
-// Dans le JSX de la fiche produit :
-<div className="mt-6 border-t border-[#EFECE6] pt-6 space-y-4">
-  <p className="text-sm text-[#6B5B52]">Une question sur ce produit ou besoin d'une personnalisation ?</p>
-  <a
-    href={whatsappUrl}
-    target="_blank"
-    rel="noopener noreferrer"
-    className="inline-flex items-center gap-2 bg-[#25D366] hover:bg-[#20ba5a] text-white text-sm font-semibold px-5 py-3 rounded-2xl transition shadow-sm"
-  >
-    <span>Discuter / Demander un devis sur WhatsApp</span>
-  </a>
-</div>
-  
-  const product = result[0];
-  let extraImages = [];
-  try {
-    extraImages = product.extra_images ? JSON.parse(product.extra_images) : [];
-  } catch (e) {
-    extraImages = [];
-  }
-
-  // Toutes les images combinées pour la galerie
-  const allImages = [product.image_url, ...extraImages].filter(Boolean);
+  // Numéro WhatsApp (remplacez par le vôtre au format international sans le +)
+  const whatsappNumber = '33600000000'; 
+  const message = `Bonjour, je souhaite avoir plus d'informations ou commander un projet personnalisé basé sur votre article "${product.title}" (${Number(product.price).toFixed(2)} €).`;
+  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-10 space-y-8">
-      <Link href="/" className="text-sm font-medium text-[#6B5B52] hover:text-[#5A3E36] transition inline-flex items-center gap-2">
+    <div className="max-w-4xl mx-auto px-4 py-12 space-y-8">
+      <Link href="/" className="text-sm text-[#6B5B52] hover:underline inline-block">
         ← Retour au catalogue
       </Link>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-        {/* Galerie photos */}
-        <div className="space-y-4">
-          <div className="aspect-square bg-white rounded-3xl border border-[#EFECE6] overflow-hidden shadow-xs">
-            {product.image_url ? (
-              <img src={product.image_url} alt={product.title} className="w-full h-full object-cover" />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center text-[#6B5B52]">Aucune image</div>
-            )}
-          </div>
-
-          {/* Photos supplémentaires */}
-          {extraImages.length > 0 && (
-            <div className="grid grid-cols-4 gap-3">
-              {extraImages.map((img, idx) => (
-                <div key={idx} className="aspect-square rounded-2xl border border-[#EFECE6] overflow-hidden bg-white shadow-2xs">
-                  <img src={img} alt="" className="w-full h-full object-cover" />
-                </div>
-              ))}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white p-6 sm:p-8 rounded-3xl border border-[#EFECE6] shadow-xs">
+        {/* Image du produit */}
+        <div>
+          {product.image_url ? (
+            <img src={product.image_url} alt={product.title} className="w-full h-80 object-cover rounded-2xl" />
+          ) : (
+            <div className="w-full h-80 bg-[#F7F4EE] flex items-center justify-center text-[#A3958E] rounded-2xl">
+              <span>Pas d'image</span>
             </div>
           )}
         </div>
 
-        {/* Informations produit */}
-        <div className="space-y-6 flex flex-col justify-center">
-          <div>
-            <span className="text-xs font-semibold tracking-wider uppercase bg-[#FFB6C1]/30 text-[#5A3E36] px-3 py-1 rounded-full">
-              {product.category || 'Création'}
-            </span>
-            <h1 className="text-3xl font-serif font-bold text-[#4A3B32] mt-3">{product.title}</h1>
-            <p className="text-2xl font-bold text-[#5A3E36] mt-2">{Number(product.price).toFixed(2)} €</p>
+        {/* Informations et actions */}
+        <div className="flex flex-col justify-between space-y-6">
+          <div className="space-y-3">
+            {product.category && (
+              <span className="text-xs font-semibold text-[#8C7A6B] uppercase tracking-wider">{product.category}</span>
+            )}
+            <h1 className="text-3xl font-serif font-bold text-[#4A3B32]">{product.title}</h1>
+            <p className="text-2xl font-bold text-[#4A3B32]">{Number(product.price).toFixed(2)} €</p>
+            <p className="text-sm text-[#6B5B52] leading-relaxed whitespace-pre-line">{product.description}</p>
           </div>
 
-          <div className="border-t border-b border-[#EFECE6] py-4 text-[#6B5B52] text-sm leading-relaxed whitespace-pre-line">
-            {product.description || "Aucune description pour le moment. Contactez l'atelier pour plus d'informations !"}
-          </div>
+          <div className="space-y-3 pt-4 border-t border-[#EFECE6]">
+            {/* Bouton Panier / Achat direct */}
+            <button className="w-full bg-[#5A3E36] hover:bg-[#4A3B32] text-white font-semibold py-3.5 rounded-2xl transition shadow-sm">
+              Ajouter au panier
+            </button>
 
-          {/* Bouton d'achat / panier (vous pouvez l'adapter selon votre composant panier interactif) */}
-          <div className="pt-4">
-            <Link 
-              href={`/panier?add=${product.id}`}
-              className="w-full block text-center bg-[#5A3E36] text-white py-3.5 rounded-2xl font-semibold hover:bg-[#4A3B32] transition shadow-sm"
+            {/* Bouton WhatsApp pour question / devis sur ce produit précis */}
+            <a
+              href={whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full bg-[#25D366] hover:bg-[#20ba5a] text-white font-semibold py-3.5 rounded-2xl transition shadow-sm flex items-center justify-center gap-2"
             >
-              Ajouter au panier / Commander
-            </Link>
+              <span>Discuter / Devis sur WhatsApp</span>
+            </a>
           </div>
         </div>
       </div>
     </div>
   );
 }
-
