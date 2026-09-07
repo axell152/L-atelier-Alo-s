@@ -23,30 +23,36 @@ export default async function AdminPage() {
     const description = formData.get('description');
     const is_hidden = formData.get('is_hidden') === 'on';
 
-    // Miniature principale
-    const mainImageFile = formData.get('main_image');
     let mainImageUrl = '';
-    if (mainImageFile && mainImageFile.size > 0) {
-      const bytes = await mainImageFile.arrayBuffer();
-      const buffer = Buffer.from(bytes);
-      mainImageUrl = `data:${mainImageFile.type};base64,${buffer.toString('base64')}`;
-    }
-
-    // Photos supplémentaires
-    const extraFiles = formData.getAll('extra_images');
     let extraUrls = [];
-    for (const file of extraFiles) {
-      if (file && file.size > 0) {
-        const bytes = await file.arrayBuffer();
+
+    try {
+      // Miniature principale
+      const mainImageFile = formData.get('main_image');
+      if (mainImageFile && mainImageFile.size > 0) {
+        const bytes = await mainImageFile.arrayBuffer();
         const buffer = Buffer.from(bytes);
-        extraUrls.push(`data:${file.type};base64,${buffer.toString('base64')}`);
+        mainImageUrl = `data:${mainImageFile.type};base64,${buffer.toString('base64')}`;
       }
+
+      // Photos supplémentaires
+      const extraFiles = formData.getAll('extra_images');
+      for (const file of extraFiles) {
+        if (file && file.size > 0) {
+          const bytes = await file.arrayBuffer();
+          const buffer = Buffer.from(bytes);
+          extraUrls.push(`data:${file.type};base64,${buffer.toString('base64')}`);
+        }
+      }
+    } catch (err) {
+      console.error("Erreur conversion image:", err);
     }
 
     await sql`
       INSERT INTO products (title, price, category, description, image_url, extra_images, is_hidden)
       VALUES (${title}, ${price}, ${category}, ${description}, ${mainImageUrl}, ${JSON.stringify(extraUrls)}, ${is_hidden})
     `;
+    
     revalidatePath('/');
     revalidatePath('/admin');
   }
@@ -71,10 +77,10 @@ export default async function AdminPage() {
   const products = await sql`SELECT * FROM products ORDER BY id DESC`;
 
   return (
-    <div className="max-w-4xl mx-auto space-y-10 pb-20">
+    <div className="max-w-4xl mx-auto space-y-10 pb-20 px-4">
       <div>
         <h1 className="text-3xl font-serif font-bold text-[#4A3B32] mb-2">Espace Administration</h1>
-        <p className="text-[#6B5B52]">Ajoutez vos créations avec description et photos multiples.</p>
+        <p className="text-[#6B5B52]">Gérez vos créations, descriptions et photos.</p>
       </div>
 
       <div className="bg-white p-6 rounded-3xl border border-[#EFECE6] shadow-xs">
@@ -94,15 +100,15 @@ export default async function AdminPage() {
           </div>
           <div className="md:col-span-2">
             <label className="block text-sm font-medium text-[#6B5B52] mb-1">Description détaillée</label>
-            <textarea name="description" rows="3" placeholder="Décrivez votre produit, les matériaux utilisés, les tailles disponibles..." className="w-full border border-[#EFECE6] rounded-2xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#5A3E36]"></textarea>
+            <textarea name="description" rows="3" placeholder="Décrivez votre produit..." className="w-full border border-[#EFECE6] rounded-2xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#5A3E36]"></textarea>
           </div>
           <div>
             <label className="block text-sm font-medium text-[#6B5B52] mb-1">Photo Miniature (Catalogue)</label>
-            <input type="file" name="main_image" accept="image/*" className="w-full text-sm text-[#6B5B52] file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-[#5A3E36] file:text-white hover:file:bg-[#4A3B32]" />
+            <input type="file" name="main_image" accept="image/*" className="w-full text-sm text-[#6B5B52]" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-[#6B5B52] mb-1">Photos supplémentaires (Fiche produit)</label>
-            <input type="file" name="extra_images" multiple accept="image/*" className="w-full text-sm text-[#6B5B52] file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-[#5A3E36] file:text-white hover:file:bg-[#4A3B32]" />
+            <label className="block text-sm font-medium text-[#6B5B52] mb-1">Photos supplémentaires</label>
+            <input type="file" name="extra_images" multiple accept="image/*" className="w-full text-sm text-[#6B5B52]" />
           </div>
           <div className="md:col-span-2 flex items-center gap-3 py-2">
             <input type="checkbox" name="is_hidden" id="is_hidden" className="w-4 h-4 text-[#5A3E36] rounded border-[#EFECE6]" />
