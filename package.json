@@ -1,5 +1,5 @@
 {
-  "name": "mon-site-cricut",
+  "name": "L'Atelier Aloès",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -8,10 +8,13 @@
     "start": "next start"
   },
   "dependencies": {
+    "autoprefixer": "^10.4.19",
     "lucide-react": "^1.16.0",
     "next": "14.2.5",
+    "postcss": "^8.4.38",
     "postgres": "^3.4.4",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "tailwindcss": "^3.4.1"
   }
 }
