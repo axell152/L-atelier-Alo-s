@@ -39,8 +39,7 @@ export default function RootLayout({ children }) {
 
         {/* Pied de page */}
         <footer className="bg-[#F7F4EE] border-t border-[#EFECE6] py-10 text-center text-xs text-[#8C7A70]">
-          <p>© {new Date().getFullYear()} L'Atelier de l'Aloès — Confectionné avec amour à la Cricut ✂️</p>
-          <p className="mt-1">Commandes personnalisées validées exclusivement via WhatsApp</p>
+          <p>© {new Date().getFullYear()} L'Atelier Aloès — Confectionné avec amour ✂️</p>
         </footer>
       </body>
     </html>
