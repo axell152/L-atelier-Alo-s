@@ -20,28 +20,52 @@ export default function ProductCard({ product }) {
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden flex flex-col shadow-sm hover:shadow-md transition">
-      {product.image_url ? (
-        <img src={product.image_url} alt={product.title} className="w-full h-48 object-cover" />
-      ) : (
-        <div className="w-full h-48 bg-slate-100 flex items-center justify-center text-slate-400">Pas d'image</div>
-      )}
-      <div className="p-5 flex-1 flex flex-col justify-between">
-        <div>
-          <span className="text-xs font-semibold tracking-wider text-indigo-600 uppercase bg-indigo-50 px-2 py-1 rounded">
-            {product.category || 'Prestation'}
+    <div className="group bg-white rounded-3xl border border-slate-100 overflow-hidden flex flex-col shadow-xs hover:shadow-xl transition-all duration-300">
+      {/* Conteneur image */}
+      <div className="relative w-full h-60 bg-slate-100 overflow-hidden">
+        {product.image_url ? (
+          <img 
+            src={product.image_url} 
+            alt={product.title} 
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center text-slate-400 text-sm font-medium">
+            ✨ Création unique
+          </div>
+        )}
+        {product.category && (
+          <span className="absolute top-3 left-3 bg-white/90 backdrop-blur-xs text-slate-800 text-xs font-semibold px-3 py-1 rounded-full shadow-xs">
+            {product.category}
           </span>
-          <h3 className="font-bold text-lg text-slate-900 mt-2">{product.title}</h3>
+        )}
+      </div>
+
+      {/* Informations */}
+      <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
+        <div>
+          <h3 className="font-bold text-lg text-slate-900 group-hover:text-indigo-600 transition-colors">
+            {product.title}
+          </h3>
         </div>
-        <div className="mt-4 flex items-center justify-between">
-          <span className="text-xl font-black text-slate-900">{Number(product.price).toFixed(2)} €</span>
+
+        <div className="flex items-center justify-between pt-2 border-t border-slate-50">
+          <div>
+            <span className="text-xs text-slate-400 block">Prix</span>
+            <span className="text-xl font-extrabold text-slate-900">
+              {Number(product.price).toFixed(2)} €
+            </span>
+          </div>
+
           <button
             onClick={addToCart}
-            className={`px-4 py-2 rounded-xl text-sm font-medium transition ${
-              added ? 'bg-emerald-600 text-white' : 'bg-slate-900 text-white hover:bg-slate-800'
+            className={`px-4 py-2.5 rounded-2xl text-sm font-semibold transition-all transform active:scale-95 shadow-xs ${
+              added 
+                ? 'bg-emerald-600 text-white shadow-emerald-600/20' 
+                : 'bg-slate-900 text-white hover:bg-indigo-600 hover:shadow-indigo-600/20'
             }`}
           >
-            {added ? '✓ Ajouté !' : 'Ajouter au panier'}
+            {added ? '✓ Ajouté !' : '+ Ajouter'}
           </button>
         </div>
       </div>
