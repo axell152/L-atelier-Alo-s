@@ -25,9 +25,6 @@ export default function RootLayout({ children }) {
       <Link href="/panier" className="inline-flex items-center gap-2 text-sm font-medium bg-[#5A3E36] text-white px-4.5 py-2.5 rounded-full hover:bg-[#4A3B32] shadow-sm transition transform active:scale-95">
         <span>🛒</span> Panier
       </Link>
-      <Link href="/admin" className="text-xs text-[#A3958E] hover:text-[#6B5B52]">
-        Admin
-      </Link>
     </nav>
   </div>
 </header>
