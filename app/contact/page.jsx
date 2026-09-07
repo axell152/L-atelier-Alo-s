@@ -8,7 +8,7 @@ export default function ContactPage() {
   const [message, setMessage] = useState('');
 
   // Remplacez ce numéro par votre propre numéro WhatsApp (format international sans le + ni les espaces, ex: 33612345678)
-  const whatsappNumber = '33600000000'; 
+  const whatsappNumber = '33750998315'; 
 
   const handleWhatsAppSubmit = (e) => {
     e.preventDefault();
