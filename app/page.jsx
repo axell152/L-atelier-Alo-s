@@ -1,5 +1,5 @@
-import sql, { initDb } from '@/lib/db';
-import ProductCard from '@/components/ProductCard';
+import sql, { initDb } from '../lib/db';
+import ProductCard from '../components/ProductCard';
 
 export const revalidate = 0; // Pas de cache pour voir les ajouts admin en direct
 
