@@ -13,30 +13,25 @@ export default function RootLayout({ children }) {
         
         {/* Barre de navigation */}
         <header className="sticky top-0 z-50 backdrop-blur-md bg-[#FDFBF7]/90 border-b border-[#EFECE6]">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
-            <Link href="/" className="flex items-center gap-3 group">
-              {/* Vous pouvez remplacer le cercle par votre logo si vous l'avez en image */}
-              <div className="w-10 h-10 rounded-full bg-[#FFB6C1] flex items-center justify-center text-[#5A3E36] font-bold shadow-xs">
-                A
-              </div>
-              <span className="font-serif font-bold text-lg tracking-wide text-[#5A3E36] group-hover:opacity-80 transition">
-                L'Atelier de l'Aloès
-              </span>
-            </Link>
+  <div className="max-w-6xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
+    <Link href="/" className="flex items-center gap-3 group">
+      {/* Intégration de votre logo */}
+      <img src="/logo.png" alt="L'Atelier de l'Aloès" className="h-12 w-auto object-contain rounded-xl" />
+    </Link>
 
-            <nav className="flex items-center gap-4 sm:gap-6">
-              <Link href="/" className="text-sm font-medium text-[#6B5B52] hover:text-[#5A3E36] transition">
-                Catalogue
-              </Link>
-              <Link href="/panier" className="inline-flex items-center gap-2 text-sm font-medium bg-[#5A3E36] text-white px-4.5 py-2.5 rounded-full hover:bg-[#4A3B32] shadow-sm transition transform active:scale-95">
-                <span>🛒</span> Panier
-              </Link>
-              <Link href="/admin" className="text-xs text-[#A3958E] hover:text-[#6B5B52]">
-                Admin
-              </Link>
-            </nav>
-          </div>
-        </header>
+    <nav className="flex items-center gap-4 sm:gap-6">
+      <Link href="/" className="text-sm font-medium text-[#6B5B52] hover:text-[#5A3E36] transition">
+        Catalogue
+      </Link>
+      <Link href="/panier" className="inline-flex items-center gap-2 text-sm font-medium bg-[#5A3E36] text-white px-4.5 py-2.5 rounded-full hover:bg-[#4A3B32] shadow-sm transition transform active:scale-95">
+        <span>🛒</span> Panier
+      </Link>
+      <Link href="/admin" className="text-xs text-[#A3958E] hover:text-[#6B5B52]">
+        Admin
+      </Link>
+    </nav>
+  </div>
+</header>
 
         {/* Contenu principal */}
         <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-12">
