@@ -1,3 +1,16 @@
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
+
+export default async function AdminPage() {
+  const cookieStore = cookies();
+  const isAuthenticated = cookieStore.get('admin_auth');
+
+  if (!isAuthenticated || isAuthenticated.value !== 'true') {
+    redirect('/admin/login');
+  }
+
+  // ... le reste de votre code admin actuel (gestion des produits, etc.)
+}
 import sql, { initDb } from '../../lib/db';
 import { revalidatePath } from 'next/cache';
 
