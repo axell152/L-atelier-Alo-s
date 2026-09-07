@@ -5,33 +5,6 @@ import { revalidatePath } from 'next/cache';
 
 export const revalidate = 0;
 
-// Fonction utilitaire pour envoyer l'image sur un hébergeur temporaire/gratuit automatiquement
-async function uploadToCloud(file) {
-  if (!file || file.size === 0) return '';
-  try {
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-    const base64Image = buffer.toString('base64');
-
-    const formData = new FormData();
-    formData.append('image', base64Image);
-
-    // Clé publique gratuite ImgBB intégrée pour les tests
-    const response = await fetch('https://api.imgbb.com/1/upload?key=6d207e029197ef1d4df9134bda272fdf', {
-      method: 'POST',
-      body: formData,
-    });
-    
-    const data = await response.json();
-    if (data && data.success) {
-      return data.data.url; // Retourne l'URL directe de l'image
-    }
-  } catch (err) {
-    console.error("Erreur upload image:", err);
-  }
-  return '';
-}
-
 export default async function AdminPage() {
   const cookieStore = cookies();
   const isAuthenticated = cookieStore.get('admin_auth');
@@ -50,16 +23,27 @@ export default async function AdminPage() {
     const description = formData.get('description');
     const is_hidden = formData.get('is_hidden') === 'on';
 
-    // 1. Upload de la miniature principale automatiquement
-    const mainImageFile = formData.get('main_image');
-    const mainImageUrl = await uploadToCloud(mainImageFile);
-
-    // 2. Upload des photos supplémentaires automatiquement
-    const extraFiles = formData.getAll('extra_images');
+    let mainImageUrl = '';
     let extraUrls = [];
-    for (const file of extraFiles) {
-      const url = await uploadToCloud(file);
-      if (url) extraUrls.push(url);
+
+    try {
+      const mainImageFile = formData.get('main_image');
+      if (mainImageFile && mainImageFile.size > 0 && mainImageFile.size < 5000000) {
+        const bytes = await mainImageFile.arrayBuffer();
+        const buffer = Buffer.from(bytes);
+        mainImageUrl = `data:${mainImageFile.type};base64,${buffer.toString('base64')}`;
+      }
+
+      const extraFiles = formData.getAll('extra_images');
+      for (const file of extraFiles) {
+        if (file && file.size > 0 && file.size < 5000000) {
+          const bytes = await file.arrayBuffer();
+          const buffer = Buffer.from(bytes);
+          extraUrls.push(`data:${file.type};base64,${buffer.toString('base64')}`);
+        }
+      }
+    } catch (e) {
+      console.log("Erreur conversion:", e);
     }
 
     await sql`
@@ -94,7 +78,7 @@ export default async function AdminPage() {
     <div className="max-w-4xl mx-auto space-y-10 pb-20 px-4">
       <div>
         <h1 className="text-3xl font-serif font-bold text-[#4A3B32] mb-2">Espace Administration</h1>
-        <p className="text-[#6B5B52]">Ajoutez vos créations directement depuis votre téléphone.</p>
+        <p className="text-[#6B5B52]">Gérez vos créations et importez vos photos.</p>
       </div>
 
       <div className="bg-white p-6 rounded-3xl border border-[#EFECE6] shadow-xs">
@@ -118,11 +102,11 @@ export default async function AdminPage() {
           </div>
           <div>
             <label className="block text-sm font-medium text-[#6B5B52] mb-1">Photo Miniature (Catalogue)</label>
-            <input type="file" name="main_image" accept="image/*" className="w-full text-sm text-[#6B5B52] file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-[#5A3E36] file:text-white hover:file:bg-[#4A3B32]" />
+            <input type="file" name="main_image" accept="image/*" className="w-full text-sm text-[#6B5B52]" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-[#6B5B52] mb-1">Photos supplémentaires (Fiche produit)</label>
-            <input type="file" name="extra_images" multiple accept="image/*" className="w-full text-sm text-[#6B5B52] file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-[#5A3E36] file:text-white hover:file:bg-[#4A3B32]" />
+            <label className="block text-sm font-medium text-[#6B5B52] mb-1">Photos supplémentaires</label>
+            <input type="file" name="extra_images" multiple accept="image/*" className="w-full text-sm text-[#6B5B52]" />
           </div>
           <div className="md:col-span-2 flex items-center gap-3 py-2">
             <input type="checkbox" name="is_hidden" id="is_hidden" className="w-4 h-4 text-[#5A3E36] rounded border-[#EFECE6]" />
