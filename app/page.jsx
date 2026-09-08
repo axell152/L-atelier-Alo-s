@@ -18,13 +18,13 @@ export default async function HomePage() {
       {/* En-tête / Bannière */}
       <div className="text-center space-y-4 py-8 bg-white rounded-3xl border border-[#EFECE6] shadow-xs px-6">
         <span className="text-xs font-semibold tracking-wider uppercase bg-[#FFB6C1]/30 text-[#5A3E36] px-3 py-1 rounded-full">
-          Créations artisanales & Cricut
+          Créations artisanales & sur-mesure
         </span>
         <h1 className="text-4xl md:text-5xl font-serif font-bold text-[#4A3B32]">
           Bienvenue à L'Atelier Aloès
         </h1>
         <p className="text-[#6B5B52] max-w-xl mx-auto text-base">
-          Découvrez mes créations personnalisées, objets uniques et petites merveilles réalisées avec amour.
+          Objets & Vêtements personnalisés
         </p>
       </div>
 
