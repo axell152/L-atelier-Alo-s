@@ -1,8 +1,14 @@
 import './globals.css';
 import Link from 'next/link';
 export const metadata = {
+  metadataBase: new URL('https://l-atelier-aloes-umber.vercel.app'),
   title: "L'Atelier Aloès | Objets et vêtements personnalisés",
   description: 'Stickers, T-shirts, Mugs et personnalisations uniques faites main.',
+  openGraph: {
+    title: "L'Atelier Aloès | Objets et vêtements personnalisés",
+    description: 'Stickers, T-shirts, Mugs et personnalisations uniques faites main.',
+    images: ['/logo.png'],
+  },
 };
 export default function RootLayout({ children }) {
   return (
