@@ -8,7 +8,7 @@ export default function ContactPage() {
   const [message, setMessage] = useState('');
 
   // Remplacez ce numéro par votre propre numéro WhatsApp (format international sans le + ni les espaces, ex: 33612345678)
-  const whatsappNumber = '33750998315'; 
+  const whatsappNumber = '33689016070'; 
 
   const handleWhatsAppSubmit = (e) => {
     e.preventDefault();
@@ -25,7 +25,7 @@ export default function ContactPage() {
         </Link>
         <h1 className="text-3xl font-serif font-bold text-[#4A3B32] mb-2">Contact & Sur-mesure</h1>
         <p className="text-[#6B5B52]">
-          Vous avez une idée particulière, une demande de devis ou une question sur une création ? Discutons-en directement via WhatsApp.
+          Vous avez une idée particulière, une demande de devis ou une question sur une création ? Envoyez-moi un message !
         </p>
       </div>
 
