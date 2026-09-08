@@ -28,9 +28,6 @@ export default async function TarifsPage() {
     <div className="max-w-4xl mx-auto space-y-12 pb-20 px-4">
       <div className="text-center space-y-3">
         <h1 className="text-3xl md:text-4xl font-serif font-bold text-[#4A3B32]">Tarifs personnalisation</h1>
-        <p className="text-[#6B5B52] max-w-xl mx-auto">
-          Un aperçu de mes tarifs pour vos créations sur-mesure. Pour un devis précis adapté à votre projet, contactez-moi.
-        </p>
       </div>
 
       {categories.length === 0 ? (
