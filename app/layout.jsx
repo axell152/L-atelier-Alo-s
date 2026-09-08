@@ -22,8 +22,11 @@ export default function RootLayout({ children }) {
       <Link href="/" className="text-sm font-medium text-[#6B5B52] hover:text-[#5A3E36] transition">
         Catalogue
       </Link>
-      <Link href="/panier" className="inline-flex items-center gap-2 text-sm font-medium bg-[#5A3E36] text-white px-4.5 py-2.5 rounded-full hover:bg-[#4A3B32] shadow-sm transition transform active:scale-95">
+      <Link href="/panier" className="text-sm font-medium text-[#6B5B52] hover:text-[#5A3E36] transition">
         <span>🛒</span> Panier
+      </Link>
+      <Link href="/contact" className="text-sm font-medium text-[#6B5B52] hover:text-[#4A3B32]">
+        Contact / Devis
       </Link>
     </nav>
   </div>
@@ -36,8 +39,7 @@ export default function RootLayout({ children }) {
 
         {/* Pied de page */}
         <footer className="bg-[#F7F4EE] border-t border-[#EFECE6] py-10 text-center text-xs text-[#8C7A70]">
-          <p>© {new Date().getFullYear()} L'Atelier de l'Aloès — Confectionné avec amour à la Cricut ✂️</p>
-          <p className="mt-1">Commandes personnalisées validées exclusivement via WhatsApp</p>
+          <p>© {new Date().getFullYear()} L'Atelier Aloès — Confectionné avec amour ✂️</p>
         </footer>
       </body>
     </html>
