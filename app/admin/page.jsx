@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import sql, { initDb } from '../../lib/db';
 import { revalidatePath } from 'next/cache';
 import AddProductForm from '../../components/AddProductForm';
+import AddPricingForm from '../../components/AddPricingForm';
 
 export const revalidate = 0;
 
@@ -73,7 +74,45 @@ export default async function AdminPage() {
     revalidatePath('/admin');
   }
 
+  async function addPricingItem(formData) {
+    'use server';
+    const category = formData.get('category');
+    const name = formData.get('name');
+    const labels = formData.getAll('option_label');
+    const prices = formData.getAll('option_price');
+
+    const options = labels
+      .map((label, i) => ({ label: (label || '').toString().trim(), price: prices[i] }))
+      .filter((o) => o.label && o.price !== '' && o.price !== null);
+
+    await sql`
+      INSERT INTO pricing_items (category, name, options)
+      VALUES (${category}, ${name}, ${JSON.stringify(options)})
+    `;
+
+    revalidatePath('/tarifs');
+    revalidatePath('/admin');
+  }
+
+  async function deletePricingItem(formData) {
+    'use server';
+    const id = formData.get('id');
+    await sql`DELETE FROM pricing_items WHERE id = ${id}`;
+    revalidatePath('/tarifs');
+    revalidatePath('/admin');
+  }
+
   const products = await sql`SELECT * FROM products ORDER BY id DESC`;
+  const pricingRows = await sql`SELECT * FROM pricing_items ORDER BY category, position, id`;
+  const pricingItems = pricingRows.map((r) => {
+    let options = [];
+    try {
+      options = JSON.parse(r.options || '[]');
+    } catch {
+      options = [];
+    }
+    return { ...r, options };
+  });
 
   return (
     <div className="max-w-4xl mx-auto space-y-10 pb-20 px-4">
@@ -117,6 +156,42 @@ export default async function AdminPage() {
             </div>
           ))}
         </div>
+      </div>
+
+      <div className="bg-white p-6 rounded-3xl border border-[#EFECE6] shadow-xs">
+        <h2 className="text-xl font-serif font-bold text-[#4A3B32] mb-4">Ajouter un tarif de personnalisation</h2>
+        <AddPricingForm action={addPricingItem} />
+      </div>
+
+      <div className="bg-white p-6 rounded-3xl border border-[#EFECE6] shadow-xs">
+        <h2 className="text-xl font-serif font-bold text-[#4A3B32] mb-4">Mes tarifs ({pricingItems.length})</h2>
+        {pricingItems.length === 0 ? (
+          <p className="text-sm text-[#6B5B52]">Aucun tarif ajouté pour le moment.</p>
+        ) : (
+          <div className="divide-y divide-[#F7F4EE]">
+            {pricingItems.map((item) => (
+              <div key={item.id} className="py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <div className="min-w-0">
+                  <span className="text-xs font-semibold text-[#5A3E36] uppercase tracking-wider">{item.category}</span>
+                  <h4 className="font-semibold text-[#4A3B32] break-words">{item.name}</h4>
+                  <div className="flex flex-wrap gap-1.5 mt-1">
+                    {item.options.map((o, i) => (
+                      <span key={i} className="text-xs bg-[#F7F4EE] text-[#6B5B52] px-2 py-0.5 rounded-full">
+                        {o.label} — {Number(o.price).toFixed(2)} €
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                <form action={deletePricingItem}>
+                  <input type="hidden" name="id" value={item.id} />
+                  <button type="submit" className="px-3 py-1.5 text-xs font-medium rounded-xl bg-red-50 text-red-600 hover:bg-red-100 shrink-0">
+                    Supprimer
+                  </button>
+                </form>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
