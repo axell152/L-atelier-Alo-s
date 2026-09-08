@@ -2,6 +2,7 @@ import sql, { initDb } from '../../../lib/db';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import AddToCartButton from '../../../components/AddToCartButton';
+import ProductGallery from '../../../components/ProductGallery';
 
 export const revalidate = 0;
 
@@ -33,25 +34,8 @@ export default async function ProductPage({ params }) {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
         {/* Galerie photos */}
-        <div className="space-y-4">
-          <div className="aspect-square bg-white rounded-3xl border border-[#EFECE6] overflow-hidden shadow-xs">
-            {product.image_url ? (
-              <img src={product.image_url} alt={product.title} className="w-full h-full object-cover" />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center text-[#6B5B52]">Aucune image</div>
-            )}
-          </div>
-
-          {/* Photos supplémentaires */}
-          {extraImages.length > 0 && (
-            <div className="grid grid-cols-4 gap-3">
-              {extraImages.map((img, idx) => (
-                <div key={idx} className="aspect-square rounded-2xl border border-[#EFECE6] overflow-hidden bg-white shadow-2xs">
-                  <img src={img} alt="" className="w-full h-full object-cover" />
-                </div>
-              ))}
-            </div>
-          )}
+        <div>
+          <ProductGallery images={allImages} title={product.title} />
         </div>
 
         {/* Informations produit */}
