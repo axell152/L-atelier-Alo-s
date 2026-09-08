@@ -1,18 +1,14 @@
 import sql, { initDb } from '../lib/db';
 import Link from 'next/link';
-
 export const revalidate = 0;
-
 export default async function HomePage() {
   await initDb();
-
   // On récupère uniquement les produits non masqués pour le catalogue public
   const products = await sql`
     SELECT * FROM products 
     WHERE is_hidden = false OR is_hidden IS NULL 
     ORDER BY id DESC
   `;
-
   return (
     <div className="max-w-6xl mx-auto px-4 py-10 space-y-12">
       {/* En-tête / Bannière */}
@@ -27,14 +23,12 @@ export default async function HomePage() {
           Objets & Vêtements personnalisés
         </p>
       </div>
-
       {/* Grille des produits */}
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-serif font-bold text-[#4A3B32]">Le Catalogue</h2>
           <span className="text-sm text-[#6B5B52]">{products.length} article{products.length > 1 ? 's' : ''} disponible{products.length > 1 ? 's' : ''}</span>
         </div>
-
         {products.length === 0 ? (
           <div className="text-center py-16 bg-white rounded-3xl border border-[#EFECE6] text-[#6B5B52]">
             <p className="text-lg">Aucun article pour le moment.</p>
