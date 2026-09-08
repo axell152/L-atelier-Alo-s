@@ -1,51 +1,89 @@
 import sql, { initDb } from '../lib/db';
-import ProductCard from '../components/ProductCard';
+import Link from 'next/link';
 
 export const revalidate = 0;
 
-async function getPublicProducts() {
-  try {
-    await initDb();
-    const products = await sql`SELECT * FROM products WHERE is_hidden = FALSE ORDER BY id DESC`;
-    return products;
-  } catch (error) {
-    console.error("Erreur DB:", error);
-    return [];
-  }
-}
+export default async function HomePage() {
+  await initDb();
 
-export default async function Home() {
-  const products = await getPublicProducts();
+  // On récupère uniquement les produits non masqués pour le catalogue public
+  const products = await sql`
+    SELECT * FROM products 
+    WHERE is_hidden = false OR is_hidden IS NULL 
+    ORDER BY id DESC
+  `;
 
   return (
-    <div className="space-y-16">
-      {/* En-tête / Bannière douce */}
-      <div className="text-center max-w-2xl mx-auto space-y-5 py-8">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#FFB6C1]/30 text-[#5A3E36] text-xs font-semibold tracking-wider uppercase border border-[#FFB6C1]/40">
-          <span>✨</span> Pièces uniques & Sur-mesure
-        </div>
-        <h1 className="text-4xl sm:text-5xl font-serif font-bold text-[#4A3B32] tracking-tight leading-tight">
-          L'art de personnaliser votre quotidien
+    <div className="max-w-6xl mx-auto px-4 py-10 space-y-12">
+      {/* En-tête / Bannière */}
+      <div className="text-center space-y-4 py-8 bg-white rounded-3xl border border-[#EFECE6] shadow-xs px-6">
+        <span className="text-xs font-semibold tracking-wider uppercase bg-[#FFB6C1]/30 text-[#5A3E36] px-3 py-1 rounded-full">
+          Créations artisanales & Cricut
+        </span>
+        <h1 className="text-4xl md:text-5xl font-serif font-bold text-[#4A3B32]">
+          Bienvenue à L'Atelier Aloès
         </h1>
-        <p className="text-base sm:text-lg text-[#6B5B52] font-normal leading-relaxed">
-          Stickers pour voitures, t-shirts, mugs et créations artisanales. Choisissez vos envies et commandez directement sur WhatsApp.
+        <p className="text-[#6B5B52] max-w-xl mx-auto text-base">
+          Découvrez mes créations personnalisées, objets uniques et petites merveilles réalisées avec amour.
         </p>
       </div>
 
       {/* Grille des produits */}
-      {products.length === 0 ? (
-        <div className="text-center py-20 bg-white rounded-3xl border border-[#EFECE6] shadow-xs max-w-md mx-auto">
-          <span className="text-3xl">🌿</span>
-          <p className="text-[#6B5B52] mt-4 font-medium">Bientôt de nouvelles créations par ici...</p>
-          <p className="text-xs text-[#A3958E] mt-1">Connectez-vous à l'espace admin pour ajouter vos articles.</p>
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-serif font-bold text-[#4A3B32]">Le Catalogue</h2>
+          <span className="text-sm text-[#6B5B52]">{products.length} article{products.length > 1 ? 's' : ''} disponible{products.length > 1 ? 's' : ''}</span>
         </div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {products.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
-      )}
+
+        {products.length === 0 ? (
+          <div className="text-center py-16 bg-white rounded-3xl border border-[#EFECE6] text-[#6B5B52]">
+            <p className="text-lg">Aucun article pour le moment.</p>
+            <p className="text-sm mt-1">Revenez très vite pour découvrir les nouveautés !</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            {products.map((p) => (
+              <Link 
+                key={p.id} 
+                href={`/produit/${p.id}`}
+                className="bg-white p-4 rounded-3xl border border-[#EFECE6] hover:shadow-md transition block group flex flex-col justify-between"
+              >
+                <div>
+                  <div className="aspect-square rounded-2xl overflow-hidden bg-[#F7F4EE] mb-4 relative">
+                    {p.image_url ? (
+                      <img 
+                        src={p.image_url} 
+                        alt={p.title} 
+                        className="w-full h-full object-cover group-hover:scale-105 transition duration-300" 
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-xs text-[#6B5B52]">
+                        Pas d'image
+                      </div>
+                    )}
+                  </div>
+                  {p.category && (
+                    <span className="text-xs font-semibold text-[#5A3E36] uppercase tracking-wider">
+                      {p.category}
+                    </span>
+                  )}
+                  <h3 className="font-serif font-bold text-[#4A3B32] text-lg mt-1 group-hover:text-[#5A3E36] transition">
+                    {p.title}
+                  </h3>
+                </div>
+                <div className="mt-4 pt-3 border-t border-[#F7F4EE] flex items-center justify-between">
+                  <span className="font-bold text-[#5A3E36] text-lg">
+                    {Number(p.price).toFixed(2)} €
+                  </span>
+                  <span className="text-xs font-medium text-[#6B5B52] bg-[#F7F4EE] px-3 py-1.5 rounded-xl group-hover:bg-[#5A3E36] group-hover:text-white transition">
+                    Voir le produit →
+                  </span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
