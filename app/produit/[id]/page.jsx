@@ -1,6 +1,7 @@
 import sql, { initDb } from '../../../lib/db';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import AddToCartButton from '../../../components/AddToCartButton';
 
 export const revalidate = 0;
 
@@ -67,14 +68,16 @@ export default async function ProductPage({ params }) {
             {product.description || "Aucune description pour le moment. Contactez l'atelier pour plus d'informations !"}
           </div>
 
-          {/* Bouton d'achat / panier (vous pouvez l'adapter selon votre composant panier interactif) */}
+          {/* Bouton d'achat / panier */}
           <div className="pt-4">
-            <Link 
-              href={`/panier?add=${product.id}`}
-              className="w-full block text-center bg-[#5A3E36] text-white py-3.5 rounded-2xl font-semibold hover:bg-[#4A3B32] transition shadow-sm"
-            >
-              Ajouter au panier / Commander
-            </Link>
+            <AddToCartButton
+              product={{
+                id: product.id,
+                title: product.title,
+                price: product.price,
+                category: product.category,
+              }}
+            />
           </div>
         </div>
       </div>
