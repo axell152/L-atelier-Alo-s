@@ -91,15 +91,15 @@ export default async function AdminPage() {
         <h2 className="text-xl font-serif font-bold text-[#4A3B32] mb-4">Mes articles ({products.length})</h2>
         <div className="divide-y divide-[#F7F4EE]">
           {products.map((p) => (
-            <div key={p.id} className="py-4 flex items-center justify-between gap-4">
-              <div className="flex items-center gap-4">
-                {p.image_url && <img src={p.image_url} alt="" className="w-12 h-12 rounded-xl object-cover" />}
-                <div>
-                  <h4 className="font-semibold text-[#4A3B32]">{p.title}</h4>
+            <div key={p.id} className="py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <div className="flex items-center gap-4 min-w-0">
+                {p.image_url && <img src={p.image_url} alt="" className="w-12 h-12 rounded-xl object-cover shrink-0" />}
+                <div className="min-w-0">
+                  <h4 className="font-semibold text-[#4A3B32] break-words">{p.title}</h4>
                   <p className="text-sm text-[#6B5B52]">{Number(p.price).toFixed(2)} € • <span className={p.is_hidden ? "text-amber-600 font-medium" : "text-emerald-600 font-medium"}>{p.is_hidden ? "🔒 Masqué" : "🌍 Public"}</span></p>
                 </div>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
                 <form action={toggleVisibility}>
                   <input type="hidden" name="id" value={p.id} />
                   <input type="hidden" name="currentStatus" value={p.is_hidden.toString()} />
