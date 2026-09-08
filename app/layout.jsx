@@ -1,7 +1,7 @@
 import './globals.css';
 import Link from 'next/link';
 export const metadata = {
-  title: "L'Atelier de l'Aloès | Objets et vêtements personnalisés",
+  title: "L'Atelier Aloès | Objets et vêtements personnalisés",
   description: 'Stickers, T-shirts, Mugs et personnalisations uniques faites main.',
 };
 export default function RootLayout({ children }) {
