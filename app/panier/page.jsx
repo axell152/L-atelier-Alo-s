@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 export default function PanierPage() {
   const [cart, setCart] = useState([]);
-  const [phone, setPhone] = useState('33600000000'); // Remplacez par votre numéro WhatsApp réel
+  const [phone, setPhone] = useState('33689016070'); // Remplacez par votre numéro WhatsApp réel
 
   useEffect(() => {
     const savedCart = JSON.parse(localStorage.getItem('cricut_cart') || '[]');
