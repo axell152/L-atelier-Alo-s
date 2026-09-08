@@ -67,9 +67,9 @@ export default function PanierPage() {
 
       <div className="divide-y divide-slate-100">
         {cart.map((item) => (
-          <div key={item.id} className="py-4 flex items-center justify-between gap-4">
-            <div>
-              <h3 className="font-bold text-slate-900 text-sm sm:text-base">{item.title}</h3>
+          <div key={item.id} className="py-4 flex flex-wrap items-center justify-between gap-4">
+            <div className="min-w-0">
+              <h3 className="font-bold text-slate-900 text-sm sm:text-base break-words">{item.title}</h3>
               <p className="text-xs text-slate-400">{Number(item.price).toFixed(2)} € l'unité</p>
             </div>
             <div className="flex items-center gap-4">
