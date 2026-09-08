@@ -26,7 +26,7 @@ export default function RootLayout({ children }) {
         Portfolio
       </Link>
       <Link href="/tarifs" className="text-sm font-medium text-[#6B5B52] hover:text-[#5A3E36] transition">
-        Tarifs personnalisation
+        Tarifs Personnalisation
       </Link>
       <Link href="/contact" className="text-sm font-medium text-[#6B5B52] hover:text-[#4A3B32]">
         Contact / Devis
