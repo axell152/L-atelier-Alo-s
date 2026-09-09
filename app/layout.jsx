@@ -22,6 +22,9 @@ export default function RootLayout({ children }) {
   <img src="/logo.png" alt="L'Atelier de l'Aloès" className="h-16 w-auto object-cover rounded-xl shadow-xs" />
 </Link>
     <nav className="flex items-center gap-4 sm:gap-6">
+      <Link href="/" className="text-sm font-medium text-[#6B5B52] hover:text-[#5A3E36] transition">
+        Accueil
+      </Link>
       <Link href="/tarifs" className="text-sm font-medium text-[#6B5B52] hover:text-[#5A3E36] transition">
         Tarifs
       </Link>
