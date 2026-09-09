@@ -21,20 +21,14 @@ export default function RootLayout({ children }) {
     <Link href="/" className="flex items-center gap-3 group">
   <img src="/logo.png" alt="L'Atelier de l'Aloès" className="h-16 w-auto object-cover rounded-xl shadow-xs" />
 </Link>
-    <nav className="flex items-center gap-4 sm:gap-6 overflow-x-auto whitespace-nowrap [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-      <Link href="/" className="text-sm font-medium text-[#6B5B52] hover:text-[#5A3E36] transition">
-        Catalogue
-      </Link>
-      <Link href="/panier" className="text-sm font-medium text-[#6B5B52] hover:text-[#5A3E36] transition">
-        <span>🛒</span> Panier
-      </Link>
-      <Link href="/portfolio" className="text-sm font-medium text-[#6B5B52] hover:text-[#5A3E36] transition">
-        Portfolio
-      </Link>
+    <nav className="flex items-center gap-4 sm:gap-6">
       <Link href="/tarifs" className="text-sm font-medium text-[#6B5B52] hover:text-[#5A3E36] transition">
-        Tarifs Personnalisation
+        Tarifs
       </Link>
-      <Link href="/contact" className="text-sm font-medium text-[#6B5B52] hover:text-[#4A3B32]">
+      <Link
+        href="/contact"
+        className="text-sm font-semibold bg-[#5A3E36] hover:bg-[#4A3B32] text-white px-4 py-2 rounded-xl transition"
+      >
         Contact / Devis
       </Link>
     </nav>
