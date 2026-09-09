@@ -1,16 +1,14 @@
 import sql, { initDb } from '../lib/db';
 import Link from 'next/link';
+
 export const revalidate = 0;
+
 export default async function HomePage() {
   await initDb();
-  // On récupère uniquement les produits non masqués pour le catalogue public
-  const products = await sql`
-    SELECT * FROM products 
-    WHERE is_hidden = false OR is_hidden IS NULL 
-    ORDER BY id DESC
-  `;
+  const items = await sql`SELECT * FROM portfolio_items ORDER BY position, id DESC`;
+
   return (
-    <div className="max-w-6xl mx-auto px-4 py-10 space-y-12">
+    <div className="max-w-5xl mx-auto space-y-12 pb-20 px-4">
       {/* En-tête / Bannière */}
       <div className="text-center space-y-4 py-8 bg-white rounded-3xl border border-[#EFECE6] shadow-xs px-6">
         <span className="text-xs font-semibold tracking-wider uppercase bg-[#FFB6C1]/30 text-[#5A3E36] px-3 py-1 rounded-full">
@@ -23,60 +21,50 @@ export default async function HomePage() {
           Objets & Vêtements personnalisés
         </p>
       </div>
-      {/* Grille des produits */}
+
+      {/* Portfolio */}
       <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-serif font-bold text-[#4A3B32]">Le Catalogue</h2>
-          <span className="text-sm text-[#6B5B52]">{products.length} article{products.length > 1 ? 's' : ''} disponible{products.length > 1 ? 's' : ''}</span>
-        </div>
-        {products.length === 0 ? (
+        <h2 className="text-2xl font-serif font-bold text-[#4A3B32] text-center">Mes réalisations</h2>
+
+        {items.length === 0 ? (
           <div className="text-center py-16 bg-white rounded-3xl border border-[#EFECE6] text-[#6B5B52]">
-            <p className="text-lg">Aucun article pour le moment.</p>
-            <p className="text-sm mt-1">Revenez très vite pour découvrir les nouveautés !</p>
+            <p className="text-lg">Le portfolio arrive bientôt.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            {products.map((p) => (
-              <Link 
-                key={p.id} 
-                href={`/produit/${p.id}`}
-                className="bg-white p-4 rounded-3xl border border-[#EFECE6] hover:shadow-md transition block group flex flex-col justify-between"
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+            {items.map((item) => (
+              <div
+                key={item.id}
+                className="bg-white rounded-3xl border border-[#EFECE6] overflow-hidden shadow-xs group"
               >
-                <div>
-                  <div className="aspect-square rounded-2xl overflow-hidden bg-[#F7F4EE] mb-4 relative">
-                    {p.image_url ? (
-                      <img 
-                        src={p.image_url} 
-                        alt={p.title} 
-                        className="w-full h-full object-cover group-hover:scale-105 transition duration-300" 
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-xs text-[#6B5B52]">
-                        Pas d'image
-                      </div>
-                    )}
-                  </div>
-                  {p.category && (
-                    <span className="text-xs font-semibold text-[#5A3E36] uppercase tracking-wider">
-                      {p.category}
-                    </span>
-                  )}
-                  <h3 className="font-serif font-bold text-[#4A3B32] text-lg mt-1 group-hover:text-[#5A3E36] transition">
-                    {p.title}
-                  </h3>
+                <div className="aspect-square overflow-hidden bg-[#F7F4EE]">
+                  <img
+                    src={item.image_url}
+                    alt={item.caption || "Réalisation L'Atelier Aloès"}
+                    className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+                  />
                 </div>
-                <div className="mt-4 pt-3 border-t border-[#F7F4EE] flex items-center justify-between">
-                  <span className="font-bold text-[#5A3E36] text-lg">
-                    {Number(p.price).toFixed(2)} €
-                  </span>
-                  <span className="text-xs font-medium text-[#6B5B52] bg-[#F7F4EE] px-3 py-1.5 rounded-xl group-hover:bg-[#5A3E36] group-hover:text-white transition">
-                    Voir le produit →
-                  </span>
-                </div>
-              </Link>
+                {item.caption && (
+                  <p className="text-sm text-[#6B5B52] px-3 py-2 text-center">{item.caption}</p>
+                )}
+              </div>
             ))}
           </div>
         )}
+      </div>
+
+      {/* Appel à l'action vers le devis */}
+      <div className="text-center bg-white rounded-3xl border border-[#EFECE6] shadow-xs py-10 px-6 space-y-4">
+        <h3 className="text-xl font-serif font-bold text-[#4A3B32]">Un projet de personnalisation en tête ?</h3>
+        <p className="text-[#6B5B52] max-w-md mx-auto">
+          Parlons-en et obtenez un devis adapté à votre demande.
+        </p>
+        <Link
+          href="/contact"
+          className="inline-block bg-[#5A3E36] hover:bg-[#4A3B32] text-white font-bold px-8 py-3.5 rounded-2xl transition"
+        >
+          Demander un devis
+        </Link>
       </div>
     </div>
   );
