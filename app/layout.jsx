@@ -30,7 +30,7 @@ export default function RootLayout({ children }) {
       </Link>
       <Link
         href="/contact"
-        className="text-sm font-semibold bg-[#5A3E36] hover:bg-[#4A3B32] text-white px-4 py-2 rounded-xl transition"
+        className="text-sm font-medium text-[#6B5B52] hover:text-[#5A3E36] transition"
       >
         Contact / Devis
       </Link>
