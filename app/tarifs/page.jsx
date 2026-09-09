@@ -1,4 +1,5 @@
 import sql, { initDb } from '../../lib/db';
+import Link from 'next/link';
 
 export const revalidate = 0;
 
@@ -28,6 +29,9 @@ export default async function TarifsPage() {
     <div className="max-w-4xl mx-auto space-y-12 pb-20 px-4">
       <div className="text-center space-y-3">
         <h1 className="text-3xl md:text-4xl font-serif font-bold text-[#4A3B32]">Tarifs personnalisation</h1>
+        <p className="text-[#6B5B52] max-w-xl mx-auto">
+          Un aperçu de mes tarifs pour vos créations sur-mesure. Pour un devis précis adapté à votre projet, contactez-moi.
+        </p>
       </div>
 
       {categories.length === 0 ? (
@@ -95,6 +99,19 @@ export default async function TarifsPage() {
           );
         })
       )}
+
+      <div className="text-center bg-white rounded-3xl border border-[#EFECE6] shadow-xs py-10 px-6 space-y-4">
+        <h3 className="text-xl font-serif font-bold text-[#4A3B32]">Un projet en tête ?</h3>
+        <p className="text-[#6B5B52] max-w-md mx-auto">
+          Ces tarifs sont indicatifs — contactez-moi pour un devis adapté à votre demande.
+        </p>
+        <Link
+          href="/contact"
+          className="inline-block bg-[#5A3E36] hover:bg-[#4A3B32] text-white font-bold px-8 py-3.5 rounded-2xl transition"
+        >
+          Demander un devis
+        </Link>
+      </div>
     </div>
   );
 }
