@@ -1,4 +1,3 @@
-```jsx
 import sql, { initDb } from '../../../lib/db';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -146,4 +145,3 @@ export default async function CategoryTarifsPage({ params }) {
     </div>
   );
 }
-```
