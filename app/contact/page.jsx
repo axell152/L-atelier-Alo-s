@@ -51,7 +51,6 @@ export default function ContactPage() {
               className="w-full border border-[#EFECE6] rounded-2xl px-4 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#5A3E36]"
             >
               <option value="Projet sur-mesure / Devis">Projet sur-mesure / Devis</option>
-              <option value="Question sur un produit">Question sur un produit existant</option>
               <option value="Autre demande">Autre demande</option>
             </select>
           </div>
