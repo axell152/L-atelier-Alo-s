@@ -88,16 +88,13 @@ export default function AddPricingForm({ action }) {
               />
 
               <input
-                name="option_price"
-                type="text"
-                inputMode="decimal"
-                value={opt.price}
-                onChange={(e) =>
-                  updateOption(opt.id, 'price', e.target.value)
-                }
-                placeholder="Prix € ou Sur devis"
-                className="w-40 border border-[#EFECE6] rounded-2xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#5A3E36]"
-              />
+  name="option_price"
+  type="text"
+  value={opt.price}
+  onChange={(e) => updateOption(opt.id, 'price', e.target.value)}
+  placeholder="Prix ou Sur devis"
+  className="w-40 border border-[#EFECE6] rounded-2xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#5A3E36]"
+/>
 
               <button
                 type="button"
