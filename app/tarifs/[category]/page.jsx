@@ -85,7 +85,7 @@ export default async function CategoryTarifsPage({ params }) {
                       key={i}
                       className="px-4 py-3 text-center text-[#5A3E36] font-medium whitespace-nowrap"
                     >
-                      {opt ? `${Number(opt.price).toFixed(2)} €` : '—'}
+                      {opt ? `${opt.price}${isNaN(Number(opt.price)) || opt.price.toString().includes('€') ? '' : ' €'}` : '—'}
                     </td>
                   );
                 })}
@@ -118,7 +118,7 @@ export default async function CategoryTarifsPage({ params }) {
                 </span>
 
                 <span className="text-[#5A3E36] font-medium whitespace-nowrap shrink-0">
-                  {Number(o.price).toFixed(2)} €
+                  {o.price ? `${o.price}${isNaN(Number(o.price)) || o.price.toString().includes('€') ? '' : ' €'}` : '—'}
                 </span>
               </div>
             ))}
