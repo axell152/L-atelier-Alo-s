@@ -36,7 +36,7 @@ export default function PricingItemRow({ item, updateAction, deleteAction }) {
           <div className="flex flex-wrap gap-1.5 mt-1">
             {item.options.map((o, i) => (
               <span key={i} className="text-xs bg-[#F7F4EE] text-[#6B5B52] px-2 py-0.5 rounded-full">
-                {o.label} — {Number(o.price).toFixed(2)} €
+                {o.label} — {isNaN(Number(o.price)) ? o.price : `${o.price} €`}
               </span>
             ))}
           </div>
@@ -88,14 +88,13 @@ export default function PricingItemRow({ item, updateAction, deleteAction }) {
               className="flex-1 border border-[#EFECE6] rounded-2xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#5A3E36]"
             />
             <input
-              name="option_price"
-              type="number"
-              step="0.01"
-              value={opt.price}
-              onChange={(e) => updateOption(opt.id, 'price', e.target.value)}
-              placeholder="Prix €"
-              className="w-28 border border-[#EFECE6] rounded-2xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#5A3E36]"
-            />
+  name="option_price"
+  type="text"
+  value={opt.price}
+  onChange={(e) => updateOption(opt.id, 'price', e.target.value)}
+  placeholder="Prix ou Sur devis"
+  className="w-40 border border-[#EFECE6] rounded-2xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#5A3E36]"
+/>
             <button
               type="button"
               onClick={() => removeOption(opt.id)}
