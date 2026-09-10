@@ -16,21 +16,21 @@ export default function RootLayout({ children }) {
       <body className="min-h-full flex flex-col bg-[#FDFBF7] text-[#4A3B32] antialiased selection:bg-[#E8A598] selection:text-white">
         
         {/* Barre de navigation */}
-        <header className="sticky top-0 z-50 backdrop-blur-md bg-[#FDFBF7]/90 border-b border-[#EFECE6]">
+        <header className="sticky top-0 z-50 bg-[#FFB6C1] border-b border-[#EFECE6]">
   <div className="max-w-6xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
     <Link href="/" className="flex items-center gap-3 group">
   <img src="/logo.png" alt="L'Atelier de l'Aloès" className="h-16 w-auto object-cover rounded-xl shadow-xs" />
 </Link>
     <nav className="flex items-center gap-4 sm:gap-6">
-      <Link href="/" className="text-sm font-medium text-[#6B5B52] hover:text-[#5A3E36] transition">
+      <Link href="/" className="text-sm font-medium text-[#4A3B32] hover:text-[#2F241D] transition">
         Accueil
       </Link>
-      <Link href="/tarifs" className="text-sm font-medium text-[#6B5B52] hover:text-[#5A3E36] transition">
+      <Link href="/tarifs" className="text-sm font-medium text-[#4A3B32] hover:text-[#2F241D] transition">
         Tarifs
       </Link>
       <Link
         href="/contact"
-        className="text-sm font-medium text-[#6B5B52] hover:text-[#5A3E36] transition"
+        className="text-sm font-semibold bg-[#5A3E36] hover:bg-[#4A3B32] text-white px-4 py-2 rounded-xl transition"
       >
         Contact / Devis
       </Link>
