@@ -99,16 +99,16 @@ export default async function CategoryTarifsPage({ params }) {
                     <thead>
                       {hasGroups && (
                         <tr>
-                          <th className="w-28 sm:w-32 px-3" />
+                          <th className={table.wrap_labels ? 'w-28 sm:w-32 px-3' : 'px-3'} />
                           <th className="border-l border-[#5A3E36]/40 px-1" />
                           {headerGroups.map((g, gi) =>
                             g.group ? (
                               <th
                                 key={gi}
                                 colSpan={g.cols.length}
-                                className="px-4 pt-1 text-[#5A3E36] font-bold text-lg sm:text-xl leading-tight"
+                                className="px-4 pt-1 text-[#5A3E36] font-bold text-lg sm:text-xl leading-tight whitespace-nowrap"
                               >
-                                {breakWords(g.group)}
+                                {table.wrap_labels ? breakWords(g.group) : g.group}
                               </th>
                             ) : (
                               <th key={gi} className="px-4" />
@@ -117,7 +117,7 @@ export default async function CategoryTarifsPage({ params }) {
                         </tr>
                       )}
                       <tr>
-                        <th className="w-28 sm:w-32 px-3" />
+                        <th className={table.wrap_labels ? 'w-28 sm:w-32 px-3' : 'px-3'} />
                         <th className="border-l border-[#5A3E36]/40 px-1" />
                         {headerGroups.map((g, gi) => (
                           <th
@@ -133,8 +133,14 @@ export default async function CategoryTarifsPage({ params }) {
                     <tbody>
                       {table.rows.map((row, ri) => (
                         <tr key={ri}>
-                          <td className="w-28 sm:w-32 text-right px-3 py-1 text-[#5A3E36] font-bold text-base sm:text-lg leading-tight">
-                            {breakWords(row.name)}
+                          <td
+                            className={
+                              (table.wrap_labels ? 'w-28 sm:w-32 ' : '') +
+                              'text-right px-3 py-1 text-[#5A3E36] font-bold text-base sm:text-lg leading-tight' +
+                              (table.wrap_labels ? '' : ' whitespace-nowrap')
+                            }
+                          >
+                            {table.wrap_labels ? breakWords(row.name) : row.name}
                           </td>
                           <td className="border-l border-[#5A3E36]/40 px-1" />
                           {table.columns.map((c, ci) => (
