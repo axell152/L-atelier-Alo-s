@@ -1,126 +1,153 @@
 import sql, { initDb } from '../../../lib/db';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { Yellowtail } from 'next/font/google';
+
+const yellowtail = Yellowtail({ weight: '400', subsets: ['latin'] });
 
 export const revalidate = 0;
+
+function displayCell(value) {
+  if (value === undefined || value === null || value.toString().trim() === '') return '—';
+  return value;
+}
 
 export default async function CategoryTarifsPage({ params }) {
   await initDb();
   const category = decodeURIComponent(params.category);
-  const rows = await sql`SELECT * FROM pricing_items WHERE category = ${category} ORDER BY position, id`;
+  const rows = await sql`SELECT * FROM pricing_tables WHERE category = ${category} ORDER BY position, id`;
 
   if (rows.length === 0) {
     notFound();
   }
 
-  const items = rows.map((r) => {
-    let options = [];
+  const tables = rows.map((t) => {
+    let columns = [];
+    let trows = [];
     try {
-      options = JSON.parse(r.options || '[]');
+      columns = JSON.parse(t.columns || '[]');
     } catch {
-      options = [];
+      columns = [];
     }
-    return { ...r, options };
+    try {
+      trows = JSON.parse(t.rows || '[]');
+    } catch {
+      trows = [];
+    }
+    return { ...t, columns, rows: trows };
   });
 
-  // Colonnes = ensemble de tous les libellés utilisés dans la catégorie,
-  // dans l'ordre où ils apparaissent. Un article sans ce tarif affiche un tiret.
-  const columns = [];
-  for (const item of items) {
-    for (const o of item.options) {
-      if (!columns.includes(o.label)) columns.push(o.label);
-    }
-  }
-
-  // Regroupe les colonnes par "taille" à partir du libellé "Taille - Couleur".
-  // Les colonnes consécutives partageant le même groupe sont fusionnées visuellement,
-  // comme dans un tableur classique.
-  const parsedColumns = columns.map((label) => {
-    const idx = label.indexOf(' - ');
-    if (idx === -1) return { group: null, sub: label, label };
-    return { group: label.slice(0, idx).trim(), sub: label.slice(idx + 3).trim(), label };
-  });
-
-  const headerGroups = [];
-  for (const col of parsedColumns) {
-    const last = headerGroups[headerGroups.length - 1];
-    if (last && col.group !== null && last.group === col.group) {
-      last.cols.push(col);
-    } else {
-      headerGroups.push({ group: col.group, cols: [col] });
-    }
-  }
+  const description = tables.find((t) => t.description && t.description.trim())?.description;
 
   return (
-    <div className="max-w-6xl mx-auto space-y-8 pb-20 px-4">
+    <div className="max-w-4xl mx-auto space-y-6 pb-20 px-4">
       <div>
         <Link href="/tarifs" className="text-sm font-medium text-[#6B5B52] hover:text-[#5A3E36] transition">
           ← Toutes les catégories
         </Link>
       </div>
 
-      <h1 className="text-3xl font-serif font-bold text-[#4A3B32]">{category}</h1>
+      <div className="bg-[#FFB6C1] rounded-3xl shadow-sm p-6 sm:p-12 space-y-10">
+        <div className="text-center space-y-2">
+          <h1 className={`${yellowtail.className} text-5xl sm:text-6xl text-[#5A3E36] leading-tight`}>
+            {category}
+          </h1>
+          {description && (
+            <p className="text-[#5A3E36]/90 text-sm max-w-lg mx-auto whitespace-pre-line">{description}</p>
+          )}
+        </div>
 
-      <div className="bg-white rounded-3xl border border-[#EFECE6] shadow-xs overflow-x-auto">
-        <table className="text-sm border-collapse">
-          <thead>
-            <tr>
-              <th rowSpan={2} className="text-left px-3 py-3 text-[#6B5B52] font-medium border-b border-r border-[#EFECE6] align-bottom">
-                Article
-              </th>
-              {headerGroups.map((g, gi) =>
-                g.group !== null ? (
-                  <th
-                    key={gi}
-                    colSpan={g.cols.length}
-                    className="text-center px-2 py-2 text-[#4A3B32] font-semibold border-b border-r border-[#EFECE6] whitespace-nowrap"
-                  >
-                    {g.group}
-                  </th>
-                ) : (
-                  <th
-                    key={gi}
-                    rowSpan={2}
-                    className="text-center px-2 py-3 text-[#6B5B52] font-medium border-b border-r border-[#EFECE6] align-bottom whitespace-nowrap"
-                  >
-                    {g.cols[0].sub}
-                  </th>
-                )
-              )}
-            </tr>
-            <tr>
-              {headerGroups.flatMap((g, gi) =>
-                g.group !== null
-                  ? g.cols.map((c, ci) => (
-                      <th
-                        key={`${gi}-${ci}`}
-                        className="text-center px-2 py-2 text-[#6B5B52] font-medium border-b border-r border-[#EFECE6] whitespace-nowrap"
-                      >
-                        {c.sub}
-                      </th>
-                    ))
-                  : []
-              )}
-            </tr>
-          </thead>
-          <tbody>
-            {items.map((item) => (
-              <tr key={item.id} className="border-b border-[#F7F4EE] last:border-0">
-                <td className="px-3 py-3 font-semibold text-[#4A3B32] border-r border-[#EFECE6] whitespace-nowrap">
-                  {item.name}
-                </td>
-                {columns.map((label, i) => {
-                  const opt = item.options.find((o) => o.label === label);
-                  return (
-                    <td key={i} className="px-2 py-3 text-center text-[#5A3E36] font-medium border-r border-[#EFECE6] whitespace-nowrap">
-                      {opt ? `${Number(opt.price).toFixed(2)} €` : '—'}
-                    </td>
-                  );
-                })}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="space-y-10">
+          {tables.map((table) => {
+            if (table.rows.length === 0) {
+              return table.title ? (
+                <h2 key={table.id} className="text-center text-lg font-bold text-[#5A3E36]">
+                  {table.title}
+                </h2>
+              ) : null;
+            }
+
+            // Fusionne les colonnes consécutives qui partagent le même "groupe"
+            const headerGroups = [];
+            for (const col of table.columns) {
+              const last = headerGroups[headerGroups.length - 1];
+              if (last && col.group && last.group === col.group) {
+                last.cols.push(col);
+              } else {
+                headerGroups.push({ group: col.group || null, cols: [col] });
+              }
+            }
+            const hasGroups = headerGroups.some((g) => g.group);
+
+            return (
+              <div key={table.id} className="space-y-3">
+                {table.title && (
+                  <h2 className="text-center text-lg font-bold text-[#5A3E36]">{table.title}</h2>
+                )}
+                <div className="overflow-x-auto">
+                  <table className="mx-auto border-collapse">
+                    <thead>
+                      {hasGroups && (
+                        <tr>
+                          <th className="px-3" />
+                          <th className="border-l border-[#5A3E36]/40 px-1" />
+                          {headerGroups.map((g, gi) =>
+                            g.group ? (
+                              <th
+                                key={gi}
+                                colSpan={g.cols.length}
+                                className="px-4 pt-1 text-[#5A3E36] font-bold text-lg sm:text-xl whitespace-nowrap"
+                              >
+                                {g.group}
+                              </th>
+                            ) : (
+                              <th key={gi} className="px-4" />
+                            )
+                          )}
+                        </tr>
+                      )}
+                      <tr>
+                        <th className="px-3" />
+                        <th className="border-l border-[#5A3E36]/40 px-1" />
+                        {headerGroups.map((g, gi) => (
+                          <th
+                            key={gi}
+                            colSpan={g.cols.length}
+                            className="px-4 pb-2 text-[#5A3E36] text-xs font-medium whitespace-nowrap"
+                          >
+                            {g.cols.map((c) => c.label).join(' | ')}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {table.rows.map((row, ri) => (
+                        <tr key={ri}>
+                          <td className="text-right px-3 py-1 text-[#5A3E36] font-bold text-base sm:text-lg whitespace-nowrap">
+                            {row.name}
+                          </td>
+                          <td className="border-l border-[#5A3E36]/40 px-1" />
+                          {table.columns.map((c, ci) => (
+                            <td
+                              key={ci}
+                              className="text-center px-3 py-1 text-[#5A3E36] font-bold text-base sm:text-lg whitespace-nowrap"
+                            >
+                              {displayCell(row.values[ci])}
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="text-center pt-2">
+          <p className={`${yellowtail.className} text-3xl text-[#5A3E36]`}>l'atelier Aloès</p>
+        </div>
       </div>
 
       <div className="text-center bg-white rounded-3xl border border-[#EFECE6] shadow-xs py-10 px-6 space-y-4">
