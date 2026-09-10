@@ -13,6 +13,7 @@ export default function PricingTableEditor({ action, initial, onDone }) {
   const [category, setCategory] = useState(initial?.category || '');
   const [title, setTitle] = useState(initial?.title || '');
   const [description, setDescription] = useState(initial?.description || '');
+  const [wrapLabels, setWrapLabels] = useState(initial?.wrap_labels || false);
 
   const [columns, setColumns] = useState(
     initial?.columns?.length
@@ -83,6 +84,7 @@ export default function PricingTableEditor({ action, initial, onDone }) {
     formData.set('category', category);
     formData.set('title', title);
     formData.set('description', description);
+    formData.set('wrap_labels', wrapLabels ? 'on' : '');
     formData.set(
       'columns',
       JSON.stringify(
@@ -186,6 +188,16 @@ export default function PricingTableEditor({ action, initial, onDone }) {
           </div>
         </div>
       </div>
+
+      <label className="flex items-center gap-2 text-sm text-[#6B5B52]">
+        <input
+          type="checkbox"
+          checked={wrapLabels}
+          onChange={(e) => setWrapLabels(e.target.checked)}
+          className="w-4 h-4 text-[#5A3E36] rounded border-[#EFECE6]"
+        />
+        Mettre chaque mot des libellés sur sa propre ligne (utile pour aligner plusieurs tableaux entre eux, comme Vêtements)
+      </label>
 
       <div>
         <label className="block text-sm font-medium text-[#6B5B52] mb-2">Lignes (articles)</label>
