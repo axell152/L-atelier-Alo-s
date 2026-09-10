@@ -47,7 +47,6 @@ export default function PricingTableEditor({ action, initial, onDone }) {
   };
 
   const removeColumn = (id) => {
-    if (columns.length === 1) return;
     setColumns((cols) => cols.filter((c) => c.id !== id));
     setRows((rs) =>
       rs.map((r) => {
@@ -69,7 +68,7 @@ export default function PricingTableEditor({ action, initial, onDone }) {
     setRows((rs) => [...rs, { id: uid(), name: '', values }]);
   };
 
-  const removeRow = (id) => setRows((rs) => (rs.length > 1 ? rs.filter((r) => r.id !== id) : rs));
+  const removeRow = (id) => setRows((rs) => rs.filter((r) => r.id !== id));
   const updateRowName = (id, value) =>
     setRows((rs) => rs.map((r) => (r.id === id ? { ...r, name: value } : r)));
   const updateCell = (rowId, colId, value) =>
@@ -87,11 +86,7 @@ export default function PricingTableEditor({ action, initial, onDone }) {
     formData.set('wrap_labels', wrapLabels ? 'on' : '');
     formData.set(
       'columns',
-      JSON.stringify(
-        columns
-          .filter((c) => c.label.trim())
-          .map((c) => ({ group: c.group.trim() || null, label: c.label.trim() }))
-      )
+      JSON.stringify(columns.map((c) => ({ group: c.group.trim() || null, label: c.label.trim() })))
     );
     formData.set(
       'rows',
@@ -169,8 +164,7 @@ export default function PricingTableEditor({ action, initial, onDone }) {
                   <button
                     type="button"
                     onClick={() => removeColumn(c.id)}
-                    disabled={columns.length === 1}
-                    className="px-1.5 rounded-lg border border-[#EFECE6] text-[#6B5B52] hover:bg-[#F7F4EE] disabled:opacity-30 text-xs"
+                    className="px-1.5 rounded-lg border border-[#EFECE6] text-[#6B5B52] hover:bg-[#F7F4EE] text-xs"
                     aria-label="Retirer cette colonne"
                   >
                     ✕
@@ -222,8 +216,7 @@ export default function PricingTableEditor({ action, initial, onDone }) {
               <button
                 type="button"
                 onClick={() => removeRow(r.id)}
-                disabled={rows.length === 1}
-                className="px-2 py-1.5 rounded-lg border border-[#EFECE6] text-[#6B5B52] hover:bg-[#F7F4EE] disabled:opacity-30 text-xs shrink-0"
+                className="px-2 py-1.5 rounded-lg border border-[#EFECE6] text-[#6B5B52] hover:bg-[#F7F4EE] text-xs shrink-0"
                 aria-label="Retirer cette ligne"
               >
                 ✕
