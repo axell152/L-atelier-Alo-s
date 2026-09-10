@@ -5,7 +5,14 @@ export const revalidate = 0;
 
 export default async function TarifsPage() {
   await initDb();
-  const rows = await sql`SELECT DISTINCT category FROM pricing_tables ORDER BY category`;
+
+  const rows = await sql`
+    SELECT category, MIN(position) AS position
+    FROM pricing_tables
+    GROUP BY category
+    ORDER BY MIN(position), category
+  `;
+
   const categories = rows.map((r) => r.category);
 
   return (
