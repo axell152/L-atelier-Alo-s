@@ -2,10 +2,9 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import sql, { initDb } from '../../lib/db';
 import { revalidatePath } from 'next/cache';
-import { del } from '@vercel/blob';
-import { put } from '@vercel/blob';
-import AddPricingForm from '../../components/AddPricingForm';
-import PricingItemRow from '../../components/PricingItemRow';
+import { put, del } from '@vercel/blob';
+import PricingTableEditor from '../../components/PricingTableEditor';
+import PricingTableRow from '../../components/PricingTableRow';
 import AddPortfolioForm from '../../components/AddPortfolioForm';
 
 export const revalidate = 0;
@@ -20,41 +19,35 @@ export default async function AdminPage() {
 
   await initDb();
 
-  async function addPricingItem(formData) {
+  async function addPricingTable(formData) {
     'use server';
     const category = formData.get('category');
-    const name = formData.get('name');
-    const labels = formData.getAll('option_label');
-    const prices = formData.getAll('option_price');
-
-    const options = labels
-      .map((label, i) => ({ label: (label || '').toString().trim(), price: prices[i] }))
-      .filter((o) => o.label && o.price !== '' && o.price !== null);
+    const title = formData.get('title') || null;
+    const description = formData.get('description') || null;
+    const columns = formData.get('columns') || '[]';
+    const rows = formData.get('rows') || '[]';
 
     await sql`
-      INSERT INTO pricing_items (category, name, options)
-      VALUES (${category}, ${name}, ${JSON.stringify(options)})
+      INSERT INTO pricing_tables (category, title, description, columns, rows)
+      VALUES (${category}, ${title}, ${description}, ${columns}, ${rows})
     `;
 
     revalidatePath('/tarifs');
     revalidatePath('/admin');
   }
 
-  async function updatePricingItem(formData) {
+  async function updatePricingTable(formData) {
     'use server';
     const id = formData.get('id');
     const category = formData.get('category');
-    const name = formData.get('name');
-    const labels = formData.getAll('option_label');
-    const prices = formData.getAll('option_price');
-
-    const options = labels
-      .map((label, i) => ({ label: (label || '').toString().trim(), price: prices[i] }))
-      .filter((o) => o.label && o.price !== '' && o.price !== null);
+    const title = formData.get('title') || null;
+    const description = formData.get('description') || null;
+    const columns = formData.get('columns') || '[]';
+    const rows = formData.get('rows') || '[]';
 
     await sql`
-      UPDATE pricing_items
-      SET category = ${category}, name = ${name}, options = ${JSON.stringify(options)}
+      UPDATE pricing_tables
+      SET category = ${category}, title = ${title}, description = ${description}, columns = ${columns}, rows = ${rows}
       WHERE id = ${id}
     `;
 
@@ -62,10 +55,10 @@ export default async function AdminPage() {
     revalidatePath('/admin');
   }
 
-  async function deletePricingItem(formData) {
+  async function deletePricingTable(formData) {
     'use server';
     const id = formData.get('id');
-    await sql`DELETE FROM pricing_items WHERE id = ${id}`;
+    await sql`DELETE FROM pricing_tables WHERE id = ${id}`;
     revalidatePath('/tarifs');
     revalidatePath('/admin');
   }
@@ -112,16 +105,23 @@ export default async function AdminPage() {
     revalidatePath('/admin');
   }
 
-  const pricingRows = await sql`SELECT * FROM pricing_items ORDER BY category, position, id`;
-  const pricingItems = pricingRows.map((r) => {
-    let options = [];
+  const pricingTableRows = await sql`SELECT * FROM pricing_tables ORDER BY category, position, id`;
+  const pricingTables = pricingTableRows.map((t) => {
+    let columns = [];
+    let rows = [];
     try {
-      options = JSON.parse(r.options || '[]');
+      columns = JSON.parse(t.columns || '[]');
     } catch {
-      options = [];
+      columns = [];
     }
-    return { ...r, options };
+    try {
+      rows = JSON.parse(t.rows || '[]');
+    } catch {
+      rows = [];
+    }
+    return { ...t, columns, rows };
   });
+
   const portfolioItems = await sql`SELECT * FROM portfolio_items ORDER BY position, id DESC`;
 
   return (
@@ -132,22 +132,22 @@ export default async function AdminPage() {
       </div>
 
       <div className="bg-white p-6 rounded-3xl border border-[#EFECE6] shadow-xs">
-        <h2 className="text-xl font-serif font-bold text-[#4A3B32] mb-4">Ajouter un tarif de personnalisation</h2>
-        <AddPricingForm action={addPricingItem} />
+        <h2 className="text-xl font-serif font-bold text-[#4A3B32] mb-4">Créer un tableau de tarifs</h2>
+        <PricingTableEditor action={addPricingTable} />
       </div>
 
       <div className="bg-white p-6 rounded-3xl border border-[#EFECE6] shadow-xs">
-        <h2 className="text-xl font-serif font-bold text-[#4A3B32] mb-4">Mes tarifs ({pricingItems.length})</h2>
-        {pricingItems.length === 0 ? (
-          <p className="text-sm text-[#6B5B52]">Aucun tarif ajouté pour le moment.</p>
+        <h2 className="text-xl font-serif font-bold text-[#4A3B32] mb-4">Mes tableaux de tarifs ({pricingTables.length})</h2>
+        {pricingTables.length === 0 ? (
+          <p className="text-sm text-[#6B5B52]">Aucun tableau créé pour le moment.</p>
         ) : (
           <div className="divide-y divide-[#F7F4EE]">
-            {pricingItems.map((item) => (
-              <PricingItemRow
-                key={item.id}
-                item={item}
-                updateAction={updatePricingItem}
-                deleteAction={deletePricingItem}
+            {pricingTables.map((table) => (
+              <PricingTableRow
+                key={table.id}
+                table={table}
+                updateAction={updatePricingTable}
+                deleteAction={deletePricingTable}
               />
             ))}
           </div>
