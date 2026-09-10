@@ -24,12 +24,13 @@ export default async function AdminPage() {
     const category = formData.get('category');
     const title = formData.get('title') || null;
     const description = formData.get('description') || null;
+    const wrapLabels = formData.get('wrap_labels') === 'on';
     const columns = formData.get('columns') || '[]';
     const rows = formData.get('rows') || '[]';
 
     await sql`
-      INSERT INTO pricing_tables (category, title, description, columns, rows)
-      VALUES (${category}, ${title}, ${description}, ${columns}, ${rows})
+      INSERT INTO pricing_tables (category, title, description, columns, rows, wrap_labels)
+      VALUES (${category}, ${title}, ${description}, ${columns}, ${rows}, ${wrapLabels})
     `;
 
     revalidatePath('/tarifs');
@@ -42,12 +43,13 @@ export default async function AdminPage() {
     const category = formData.get('category');
     const title = formData.get('title') || null;
     const description = formData.get('description') || null;
+    const wrapLabels = formData.get('wrap_labels') === 'on';
     const columns = formData.get('columns') || '[]';
     const rows = formData.get('rows') || '[]';
 
     await sql`
       UPDATE pricing_tables
-      SET category = ${category}, title = ${title}, description = ${description}, columns = ${columns}, rows = ${rows}
+      SET category = ${category}, title = ${title}, description = ${description}, columns = ${columns}, rows = ${rows}, wrap_labels = ${wrapLabels}
       WHERE id = ${id}
     `;
 
