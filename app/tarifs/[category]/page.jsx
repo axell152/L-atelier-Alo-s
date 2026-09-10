@@ -89,14 +89,14 @@ export default async function CategoryTarifsPage({ params }) {
                     <thead>
                       {hasGroups && (
                         <tr>
-                          <th className="px-3" />
+                          <th className="w-28 sm:w-32 px-3" />
                           <th className="border-l border-[#5A3E36]/40 px-1" />
                           {headerGroups.map((g, gi) =>
                             g.group ? (
                               <th
                                 key={gi}
                                 colSpan={g.cols.length}
-                                className="px-4 pt-1 text-[#5A3E36] font-bold text-lg sm:text-xl whitespace-nowrap"
+                                className="px-4 pt-1 text-[#5A3E36] font-bold text-lg sm:text-xl leading-tight"
                               >
                                 {g.group}
                               </th>
@@ -107,7 +107,7 @@ export default async function CategoryTarifsPage({ params }) {
                         </tr>
                       )}
                       <tr>
-                        <th className="px-3" />
+                        <th className="w-28 sm:w-32 px-3" />
                         <th className="border-l border-[#5A3E36]/40 px-1" />
                         {headerGroups.map((g, gi) => (
                           <th
@@ -123,7 +123,7 @@ export default async function CategoryTarifsPage({ params }) {
                     <tbody>
                       {table.rows.map((row, ri) => (
                         <tr key={ri}>
-                          <td className="text-right px-3 py-1 text-[#5A3E36] font-bold text-base sm:text-lg whitespace-nowrap">
+                          <td className="w-28 sm:w-32 text-right px-3 py-1 text-[#5A3E36] font-bold text-base sm:text-lg leading-tight">
                             {row.name}
                           </td>
                           <td className="border-l border-[#5A3E36]/40 px-1" />
