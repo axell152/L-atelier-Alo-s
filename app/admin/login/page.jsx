@@ -21,7 +21,7 @@ export default function AdminLogin() {
 
   return (
     <div className="max-w-md mx-auto mt-20 bg-white p-8 rounded-3xl border border-[#EFECE6] shadow-sm text-center space-y-6">
-      <div className="w-12 h-12 bg-[#FFB6C1]/30 text-[#5A3E36] rounded-2xl mx-auto flex items-center justify-center text-xl font-bold">
+      <div className="w-12 h-12 bg-[#FF9CCB]/30 text-[#5A3E36] rounded-2xl mx-auto flex items-center justify-center text-xl font-bold">
         🔒
       </div>
       <h1 className="text-2xl font-serif font-bold text-[#4A3B32]">Espace Réservé</h1>
