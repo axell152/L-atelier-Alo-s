@@ -69,7 +69,7 @@ export default function RootLayout({ children }) {
               </svg>
             </a>
           </div>
-          <p>© {new Date().getFullYear()} L'Atelier Aloès — Confectionné avec amour ✂️</p>
+          <p>© {new Date().getFullYear()} L'Atelier Aloès </p>
         </footer>
       </body>
     </html>
