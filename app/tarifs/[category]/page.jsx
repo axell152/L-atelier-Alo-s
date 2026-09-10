@@ -12,6 +12,16 @@ function displayCell(value) {
   return value;
 }
 
+function breakWords(text) {
+  const words = text.split(' ').filter(Boolean);
+  return words.map((word, i) => (
+    <span key={i}>
+      {word}
+      {i < words.length - 1 && <br />}
+    </span>
+  ));
+}
+
 export default async function CategoryTarifsPage({ params }) {
   await initDb();
   const category = decodeURIComponent(params.category);
@@ -98,7 +108,7 @@ export default async function CategoryTarifsPage({ params }) {
                                 colSpan={g.cols.length}
                                 className="px-4 pt-1 text-[#5A3E36] font-bold text-lg sm:text-xl leading-tight"
                               >
-                                {g.group}
+                                {breakWords(g.group)}
                               </th>
                             ) : (
                               <th key={gi} className="px-4" />
@@ -124,7 +134,7 @@ export default async function CategoryTarifsPage({ params }) {
                       {table.rows.map((row, ri) => (
                         <tr key={ri}>
                           <td className="w-28 sm:w-32 text-right px-3 py-1 text-[#5A3E36] font-bold text-base sm:text-lg leading-tight">
-                            {row.name}
+                            {breakWords(row.name)}
                           </td>
                           <td className="border-l border-[#5A3E36]/40 px-1" />
                           {table.columns.map((c, ci) => (
