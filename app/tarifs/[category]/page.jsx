@@ -88,6 +88,8 @@ export default async function CategoryTarifsPage({ params }) {
               }
             }
             const hasGroups = headerGroups.some((g) => g.group);
+            const hasAnyLabel = table.columns.some((c) => c.label && c.label.trim());
+            const showHeader = hasGroups || hasAnyLabel;
 
             return (
               <div key={table.id} className="space-y-3">
@@ -96,6 +98,7 @@ export default async function CategoryTarifsPage({ params }) {
                 )}
                 <div className="overflow-x-auto">
                   <table className="mx-auto border-collapse">
+                    {showHeader && (
                     <thead>
                       {hasGroups && (
                         <tr>
@@ -130,6 +133,7 @@ export default async function CategoryTarifsPage({ params }) {
                         ))}
                       </tr>
                     </thead>
+                    )}
                     <tbody>
                       {table.rows.map((row, ri) => (
                         <tr key={ri}>
