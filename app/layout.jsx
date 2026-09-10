@@ -16,7 +16,7 @@ export default function RootLayout({ children }) {
       <body className="min-h-full flex flex-col bg-[#FDFBF7] text-[#4A3B32] antialiased selection:bg-[#E8A598] selection:text-white">
         
         {/* Barre de navigation */}
-        <header className="sticky top-0 z-50 bg-[#FFB6C1] border-b border-[#EFECE6]">
+        <header className="sticky top-0 z-50 bg-[#FF9CCB] border-b border-[#EFECE6]">
   <div className="max-w-6xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
     <Link href="/" className="flex items-center gap-3 group">
   <img src="/logo.png" alt="L'Atelier de l'Aloès" className="h-16 w-auto object-cover rounded-xl shadow-xs" />
