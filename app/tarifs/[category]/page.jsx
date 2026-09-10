@@ -57,7 +57,7 @@ export default async function CategoryTarifsPage({ params }) {
         </Link>
       </div>
 
-      <div className="bg-[#FFB6C1] rounded-3xl shadow-sm p-6 sm:p-12 space-y-10">
+      <div className="bg-[#FF9CCB] rounded-3xl shadow-sm p-6 sm:p-12 space-y-10">
         <div className="text-center space-y-2">
           <h1 className={`${yellowtail.className} text-5xl sm:text-6xl text-[#5A3E36] leading-tight`}>
             {category}
